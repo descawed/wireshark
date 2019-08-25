@@ -1921,6 +1921,7 @@ Dot11DecryptRsnaPrfX(
     UCHAR R[100];
     INT offset=sizeof("Pairwise key expansion");
     UCHAR output[80]; /* allow for sha1 overflow. */
+    UINT8 rot_buf[3];
 
     memset(R, 0, 100);
 
@@ -1962,6 +1963,9 @@ Dot11DecryptRsnaPrfX(
         }
     }
     memcpy(ptk, output, x/8);
+    memcpy(rot_buf, ptk, 3);
+    memmove(ptk, ptk + 3, 48 - 3);
+    memcpy(ptk + 48 - 3, rot_buf, 3);
 }
 
 #define MAX_SSID_LENGTH 32 /* maximum SSID length */
